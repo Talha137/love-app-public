@@ -1,145 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Love App</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
   <style>
-    body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #ff4d6d, #ffb6c1);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-    }
-    .card {
-      text-align: center;
-      padding: 40px 30px;
-      border-radius: 25px;
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-      min-width: 320px;
-    }
-    .title { font-size: 28px; margin-bottom: 20px; }
-    .input {
-      width: 240px;
-      padding: 14px 16px;
-      border-radius: 30px;
-      border: none;
-      outline: none;
-      text-align: center;
-      background: rgba(255,255,255,0.25);
-      color: white;
-      margin-bottom: 18px;
-    }
-    .input::placeholder { color: rgba(255,255,255,0.7); }
-    .btn {
-      padding: 12px 22px;
-      border-radius: 30px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-      margin: 8px;
-    }
-    .btnRow {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .yes { background: #ff2e63; color: white; }
-    .no { background: #333; color: white; }
-    .primary { background: white; color: #ff2e63; }
-    .btn:hover { transform: scale(1.08); }
-    .love { font-size: 34px; }
+    body{margin:0;font-family:Arial;background:linear-gradient(135deg,#ff4d6d,#ffb6c1);height:100vh;display:flex;justify-content:center;align-items:center;color:white}
+    .card{text-align:center;padding:40px;border-radius:25px;background:rgba(255,255,255,.18);box-shadow:0 10px 30px rgba(0,0,0,.2)}
+    input{padding:14px;border-radius:30px;border:0;text-align:center}
+    button{padding:12px 22px;border-radius:30px;border:0;margin:8px;font-weight:bold;cursor:pointer}
+    .yes{background:#ff2e63;color:white}.no{background:#333;color:white}.primary{color:#ff2e63}
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div class="card" id="app">
+    <h1>💖 Enter Your Name</h1>
+    <input id="name" placeholder="Your name..." />
+    <br><br>
+    <button class="primary" onclick="next()">Continue ➜</button>
+  </div>
 
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script crossorigin src="https://unpkg.com/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <script type="text/babel">
-    const { useState } = React;
-
-    function App() {
-      const [step, setStep] = useState(1);
-      const [name, setName] = useState("");
-      const [yes, setYes] = useState(false);
-      const [noPos, setNoPos] = useState({ x: 0, y: 0 });
-
-      const moveNo = () => {
-        const randomX = Math.random() * window.innerWidth - window.innerWidth / 2;
-        const randomY = Math.random() * window.innerHeight - window.innerHeight / 2;
-        setNoPos({ x: randomX, y: randomY });
-      };
-
-      const yesClick = () => {
-        setYes(true);
-        confetti({ particleCount: 300, spread: 140, origin: { y: 0.6 } });
-      };
-
-      return (
-        <div className="container">
-          {step === 1 && (
-            <div className="card">
-              <h1 className="title">💖 Enter Your Name</h1>
-              <input
-                className="input"
-                placeholder="Your name..."
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <button className="btn primary" onClick={() => name.trim() && setStep(2)}>
-                Continue ➜
-              </button>
-            </div>
-          )}
-
-          {step === 2 && !yes && (
-            <div className="card">
-              <h1 className="title">Do you love me, {name}? 💕</h1>
-              <div className="btnRow">
-                <button className="btn yes" onClick={yesClick}>YES 💖</button>
-                <button
-                  className="btn no"
-                  onMouseEnter={moveNo}
-                  onMouseMove={moveNo}
-                  onTouchStart={moveNo}
-                  style={{
-                    position: "fixed",
-                    left: "50%",
-                    top: "50%",
-                    transform: `translate(${noPos.x}px, ${noPos.y}px)`,
-                    transition: "0.03s linear",
-                    zIndex: 9999,
-                    cursor: "not-allowed",
-                  }}
-                >
-                  NO 😅
-                </button>
-              </div>
-            </div>
-          )}
-
-          {yes && (
-            <div className="card">
-              <h1 className="love">💖 Yesss {name}, I knew it 💖</h1>
-            </div>
-          )}
-        </div>
-      );
-    }
-
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-  </script>
+<script>
+function next(){
+  var name=document.getElementById("name").value.trim();
+  if(!name)return;
+  document.getElementById("app").innerHTML=
+    '<h1>Do you love me, '+name+'? 💕</h1><button class="yes" onclick="yes(\\''+name+'\\')">YES 💖</button><button id="no" class="no">NO 😅</button>';
+  var no=document.getElementById("no");
+  no.onmouseover=no.ontouchstart=function(){
+    no.style.position="fixed";
+    no.style.left=Math.random()*80+"%";
+    no.style.top=Math.random()*80+"%";
+  };
+}
+function yes(name){
+  document.getElementById("app").innerHTML='<h1>💖 Yesss '+name+', I knew it 💖</h1>';
+}
+</script>
 </body>
 </html>
