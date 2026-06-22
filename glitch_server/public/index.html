@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Love App</title>
+    <!-- Load Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+    <style>
+      /* Base styles copied from App.css */
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #ff4d6d, #ffb6c1);
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+      }
+      .card {
+        text-align: center;
+        padding: 40px 30px;
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        min-width: 320px;
+      }
+      .title {
+        font-size: 28px;
+        margin-bottom: 20px;
+      }
+      .input {
+        width: 240px;
+        padding: 14px 16px;
+        border-radius: 30px;
+        border: none;
+        outline: none;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.25);
+        color: white;
+        margin-bottom: 18px;
+        box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.2);
+        transition: 0.3s;
+      }
+      .input::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .input:focus {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+      }
+      .btn {
+        padding: 12px 22px;
+        border-radius: 30px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.2s ease;
+        margin: 8px;
+      }
+      .btnRow {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+      }
+      .yes {
+        background: #ff2e63;
+        color: white;
+      }
+      .no {
+        background: #333;
+        color: white;
+        position: relative;
+      }
+      .primary {
+        background: white;
+        color: #ff2e63;
+      }
+      .btn:hover {
+        transform: scale(1.08);
+      }
+      .love {
+        font-size: 34px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Load dependencies -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Our React application compiled at runtime by Babel -->
+    <script type="text/babel">
+      const { useState } = React;
+      const { BrowserRouter, Routes, Route, Link } = ReactRouterDOM;
+      function LovePage() {
+        const [step, setStep] = useState(1);
+        const [name, setName] = useState("");
+        const [yes, setYes] = useState(false);
+        const [noPos, setNoPos] = useState({ x: 0, y: 0 });
+        const send = async (ans) => {
+          await fetch("/answer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              answer: ans,
+              time: new Date().toLocaleString(),
+            }),
+          });
+        };
+        const moveNo = () => {
+          const randomX = Math.random() * window.innerWidth - window.innerWidth / 2;
+          const randomY = Math.random() * window.innerHeight - window.innerHeight / 2;
+          setNoPos({ x: randomX, y: randomY });
+        };
+        const yesClick = () => {
+          setYes(true);
+          send("YES");
+          confetti({ particleCount: 300, spread: 140, origin: { y: 0.6 } });
+        };
+        return (
+          <div className="container">
+            {step === 1 && (
+              <div className="card">
+                <h1 className="title">💖 Enter Your Name</h1>
+                <input className="input" placeholder="Your name..." onChange={(e) => setName(e.target.value)} />
+                <button className="btn primary" onClick={() => name.trim() && setStep(2)}>
+                  Continue ➜
+                </button>
+              </div>
+            )}
+            {step === 2 && !yes && (
+              <div className="card">
+                <h1 className="title">Do you love me, {name}? 💕</h1>
+                <div className="btnRow">
+                  <button className="btn yes" onClick={yesClick}>YES 💖</button>
+                  <button
+                    className="btn no"
+                    onMouseEnter={moveNo}
+                    onMouseMove={moveNo}
+                    onMouseDown={moveNo}
+                    onTouchStart={moveNo}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      moveNo();
+                    }}
+                    style={{
+                      position: "fixed",
+                      left: "50%",
+                      top: "50%",
+                      transform: `translate(${noPos.x}px, ${noPos.y}px)`,
+                      transition: "0.03s linear",
+                      zIndex: 9999,
+                      cursor: "not-allowed",
+                    }}
+                  >
+                    NO 😅
+                  </button>
+                </div>
+              </div>
+            )}
+            {yes && (
+              <div className="card">
+                <h1 className="love">💖 Yesss {name}, I knew it 💖</h1>
+              </div>
+            )}
+            <div style={{ marginTop: "20px" }}>
+              <Link to="/admin">
+                <button className="btn primary">Admin Panel</button>
+              </Link>
+            </div>
+          </div>
+        );
+      }
+      function AdminPage() {
+        const [password, setPassword] = useState("");
+        const [data, setData] = useState([]);
+        const [authorized, setAuthorized] = useState(false);
+        const login = async () => {
+          try {
+            const res = await fetch(`/admin?password=${password}`);
+            if (!res.ok) {
+              alert("Wrong Password ❌");
+              return;
+            }
+            const result = await res.json();
+            setData(result);
+            setAuthorized(true);
+          } catch (error) {
+            alert("Server not running");
+            console.log(error);
+          }
+        };
+        if (!authorized) {
+          return (
+            <div style={{ padding: "20px" }}>
+              <h1>Admin Login</h1>
+              <input
+                type="password"
+                placeholder="Enter Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button onClick={login}>Login</button>
+            </div>
+          );
+        }
+        return (
+          <div style={{ padding: "20px" }}>
+            <h1>Admin Panel</h1>
+            {data.length === 0 ? (
+              <p>No answers yet</p>
+            ) : (
+              <table border="1" cellPadding="10">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Answer</th>
+                    <th>Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.name}</td>
+                      <td>{item.answer}</td>
+                      <td>{item.time}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        );
+      }
+      function App() {
+        return (
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<LovePage />} />
+              <Route path="/admin" element={<AdminPage />} />
+            </Routes>
+          </BrowserRouter>
+        );
+      }
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
