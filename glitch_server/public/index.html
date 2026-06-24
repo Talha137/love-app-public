@@ -141,12 +141,12 @@ function moveNo(){
   noBtn.style.position="fixed";
   noBtn.style.left=x+"px";
   noBtn.style.top=y+"px";
-  noBtn.style.transition=".015s linear";
+  noBtn.style.transition=".010s linear";
 }
 
 async function showAdmin(){
   const { data, error } = await db
-    .from(TABLE_NAME)
+    .from(Love table)
     .select("*")
     .order("created_at",{ascending:false});
 
