@@ -109,8 +109,8 @@
       display:flex;
       justify-content:center;
       align-items:center;
-      gap:18px;
-      min-height:90px;
+      gap:20px;
+      min-height:120px;
       position:relative;
     }
 
@@ -183,7 +183,11 @@ if(window.location.search === "?admin=Talha123"){
 async function saveData(name, answer){
   const { error } = await db
     .from(TABLE_NAME)
-    .insert([{ name:name, answer:answer }]);
+    .insert([{
+      name:name,
+      answer:answer,
+      created_at:new Date().toISOString()
+    }]);
 
   if(error){
     alert("Database error: " + error.message);
@@ -262,46 +266,45 @@ function detectNearNo(e){
   let rect = noBtn.getBoundingClientRect();
   let centerX = rect.left + rect.width/2;
   let centerY = rect.top + rect.height/2;
-  let distance = Math.hypot(e.clientX-centerX,e.clientY-centerY);
 
-  if(distance < 130){
+  let distance = Math.hypot(
+    e.clientX - centerX,
+    e.clientY - centerY
+  );
+
+  if(distance < 120){
     moveNo();
   }
 }
 
 function moveNo(){
   let noBtn = document.getElementById("noBtn");
-  let yesBtn = document.getElementById("yesBtn");
   let card = document.getElementById("app");
 
-  if(!noBtn || !yesBtn || !card)return;
+  if(!noBtn || !card)return;
 
   let cardRect = card.getBoundingClientRect();
-  let yesRect = yesBtn.getBoundingClientRect();
 
-  let btnW = noBtn.offsetWidth;
-  let btnH = noBtn.offsetHeight;
+  let btnWidth = noBtn.offsetWidth;
+  let btnHeight = noBtn.offsetHeight;
 
-  let x,y,safe=false;
+  let minX = cardRect.left + 20;
+  let maxX = cardRect.right - btnWidth - 20;
 
-  for(let i=0;i<80;i++){
-    x = cardRect.left + 20 + Math.random()*(cardRect.width-btnW-40);
-    y = cardRect.top + 85 + Math.random()*(cardRect.height-btnH-140);
+  let minY = cardRect.top + 120;
+  let maxY = cardRect.bottom - btnHeight - 20;
 
-    safe = (
-      x + btnW < yesRect.left - 15 ||
-      x > yesRect.right + 15 ||
-      y + btnH < yesRect.top - 15 ||
-      y > yesRect.bottom + 15
-    );
-
-    if(safe)break;
+  if(maxX <= minX || maxY <= minY){
+    return;
   }
 
+  let randomX = Math.random() * (maxX - minX) + minX;
+  let randomY = Math.random() * (maxY - minY) + minY;
+
   noBtn.style.position = "fixed";
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-  noBtn.style.transition = ".010s linear";
+  noBtn.style.left = randomX + "px";
+  noBtn.style.top = randomY + "px";
+  noBtn.style.transition = ".06s linear";
 }
 
 async function showAdmin(){
