@@ -37,7 +37,7 @@
 <script>
 const SUPABASE_URL = "https://bczjmurcvoiiftqtvkia.supabase.co";
 const SUPABASE_KEY = "sb_publishable_wkVI-obT0GYZncKQAdY1wg_hKSXMUTB";
-const TABLE_NAME = "Love table";
+const TABLE_NAME = "Love_table";
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let app = document.getElementById("app");
@@ -49,7 +49,7 @@ if(window.location.search === "?admin=Talha123"){
 }
 
 async function saveData(name, answer){
-  await db.from(TABLE_NAME).insert([{ name:name, answer:answer }]);
+  await db.from(Love_table).insert([{ name:name, answer:answer }]);
 }
 
 async function next(){
@@ -146,7 +146,7 @@ function moveNo(){
 
 async function showAdmin(){
   const { data, error } = await db
-    .from(Love table)
+    .from(Love_table)
     .select("*")
     .order("created_at",{ascending:false});
 
