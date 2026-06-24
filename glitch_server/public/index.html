@@ -8,52 +8,42 @@
     body{
       margin:0;
       font-family:'Segoe UI',Arial,sans-serif;
-      background:
-        radial-gradient(circle at 20% 20%,rgba(255,255,255,.35),transparent 20%),
-        radial-gradient(circle at 80% 30%,rgba(255,255,255,.25),transparent 18%),
-        linear-gradient(135deg,#ff2e63,#ff9eb5,#ffc1cc);
+      background:linear-gradient(135deg,#ff2e63,#ff8fab,#ffc2d1);
       height:100vh;
       display:flex;
       justify-content:center;
       align-items:center;
       color:white;
       overflow:hidden;
+      position:relative;
     }
 
-    body::before{
-      content:"💖  ✨  💕  ✨  💗  💖  ✨  💕  ✨  💗";
+    .heart-bg{
       position:fixed;
-      top:-50px;
-      left:0;
-      width:200%;
-      font-size:42px;
-      opacity:.18;
-      animation:floatHearts 12s linear infinite;
+      inset:0;
+      overflow:hidden;
       pointer-events:none;
-      white-space:nowrap;
+      z-index:0;
     }
 
-    body::after{
-      content:"✨ 💖 ✨ 💕 ✨ 💗 ✨ 💖 ✨ 💕";
-      position:fixed;
-      bottom:-40px;
-      right:0;
-      width:200%;
-      font-size:35px;
-      opacity:.14;
-      animation:floatHearts2 14s linear infinite;
-      pointer-events:none;
-      white-space:nowrap;
+    .heart-bg span{
+      position:absolute;
+      color:rgba(255,255,255,.18);
+      font-size:120px;
+      text-shadow:0 18px 45px rgba(180,0,70,.25);
+      animation:slowFloat 12s ease-in-out infinite;
     }
 
-    @keyframes floatHearts{
-      from{transform:translateX(-20%) translateY(0)}
-      to{transform:translateX(20%) translateY(120vh)}
-    }
+    .heart-bg span:nth-child(1){left:5%;top:10%;font-size:150px}
+    .heart-bg span:nth-child(2){right:7%;top:8%;font-size:130px;animation-delay:1s}
+    .heart-bg span:nth-child(3){left:12%;bottom:8%;font-size:110px;animation-delay:2s}
+    .heart-bg span:nth-child(4){right:14%;bottom:10%;font-size:160px;animation-delay:3s}
+    .heart-bg span:nth-child(5){left:43%;top:4%;font-size:95px;animation-delay:1.5s}
+    .heart-bg span:nth-child(6){left:45%;bottom:2%;font-size:125px;animation-delay:2.5s}
 
-    @keyframes floatHearts2{
-      from{transform:translateX(20%) translateY(0)}
-      to{transform:translateX(-20%) translateY(-120vh)}
+    @keyframes slowFloat{
+      0%,100%{transform:translateY(0) scale(1)}
+      50%{transform:translateY(-25px) scale(1.05)}
     }
 
     .card{
@@ -62,9 +52,9 @@
       text-align:center;
       padding:55px 45px;
       border-radius:35px;
-      background:rgba(255,255,255,.20);
+      background:rgba(255,255,255,.22);
       backdrop-filter:blur(14px);
-      box-shadow:0 15px 40px rgba(0,0,0,.22);
+      box-shadow:0 18px 45px rgba(0,0,0,.22);
       min-width:350px;
       max-width:90vw;
       animation:cardPop .7s ease;
@@ -79,7 +69,7 @@
       font-size:32px;
       line-height:1.35;
       margin-top:0;
-      text-shadow:0 2px 10px rgba(0,0,0,.25);
+      text-shadow:0 3px 10px rgba(120,0,50,.35);
     }
 
     input{
@@ -92,26 +82,35 @@
       width:250px;
       color:#ff2e63;
       font-weight:bold;
+      box-shadow:0 8px 20px rgba(0,0,0,.14);
     }
 
     input::placeholder{
       color:#ff8aa3;
     }
 
+    .btn-row{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:18px;
+      margin-top:20px;
+      min-height:80px;
+    }
+
     button{
-      padding:16px 35px;
+      padding:16px 38px;
       border-radius:30px;
       border:none;
-      margin:18px 10px;
       font-weight:bold;
       cursor:pointer;
       font-size:18px;
-      transition:.15s;
-      box-shadow:0 8px 20px rgba(0,0,0,.18);
+      transition:.18s ease;
+      box-shadow:0 8px 20px rgba(0,0,0,.20);
     }
 
     button:hover{
-      transform:scale(1.08);
+      transform:scale(1.06);
     }
 
     .yes{
@@ -123,11 +122,13 @@
       background:#222;
       color:white;
       user-select:none;
+      position:relative;
     }
 
     .primary{
       background:white;
       color:#ff2e63;
+      margin-top:18px;
     }
 
     .powered{
@@ -139,17 +140,18 @@
     }
 
     .love-message{
-      font-size:40px;
+      font-size:38px;
       font-weight:900;
+      color:#fff;
       animation:pop 1s ease;
-      text-shadow:0 0 10px white,
-                  0 0 20px #fff,
-                  0 0 35px #ff2e63;
+      text-shadow:
+        0 3px 8px rgba(100,0,45,.45),
+        0 0 8px rgba(255,46,99,.55);
     }
 
     @keyframes pop{
       0%{transform:scale(0);opacity:0}
-      60%{transform:scale(1.15);opacity:1}
+      60%{transform:scale(1.12);opacity:1}
       100%{transform:scale(1);opacity:1}
     }
 
@@ -169,12 +171,21 @@
 </head>
 <body>
 
+<div class="heart-bg">
+  <span>♥</span>
+  <span>♥</span>
+  <span>♥</span>
+  <span>♥</span>
+  <span>♥</span>
+  <span>♥</span>
+</div>
+
 <div class="card" id="app">
   <h1>💖 Enter Your Name</h1>
 
   <input id="name" placeholder="Your name...">
 
-  <br><br>
+  <br>
 
   <button class="primary" id="continueBtn">
     Continue ➜
@@ -218,13 +229,15 @@ function next(){
   app.innerHTML=`
     <h1>Do you love me, ${name}? 💕</h1>
 
-    <button class="yes" id="yesBtn">
-      YES 💖
-    </button>
+    <div class="btn-row">
+      <button class="yes" id="yesBtn">
+        YES 💖
+      </button>
 
-    <button class="no" id="noBtn">
-      NO 😅
-    </button>
+      <button class="no" id="noBtn">
+        NO 😅
+      </button>
+    </div>
 
     <div class="powered">
       ✨ Powered by Talha Tariq ✨
@@ -261,16 +274,12 @@ function next(){
 
   let noBtn=document.getElementById("noBtn");
 
-  noBtn.addEventListener("mouseenter",moveNo);
-  noBtn.addEventListener("mousemove",moveNo);
-  noBtn.addEventListener("mouseover",moveNo);
+  noBtn.addEventListener("click",moveNo);
   noBtn.addEventListener("mousedown",moveNo);
   noBtn.addEventListener("touchstart",function(e){
     e.preventDefault();
     moveNo();
   });
-
-  setInterval(moveNo,650);
 }
 
 function moveNo(){
@@ -278,9 +287,9 @@ function moveNo(){
   if(!noBtn)return;
 
   noBtn.style.position="fixed";
-  noBtn.style.left=(Math.random()*75+5)+"%";
-  noBtn.style.top=(Math.random()*75+5)+"%";
-  noBtn.style.transition=".05s linear";
+  noBtn.style.left=(Math.random()*75+8)+"%";
+  noBtn.style.top=(Math.random()*70+10)+"%";
+  noBtn.style.transition=".03s linear";
 }
 
 function showAdmin(){
