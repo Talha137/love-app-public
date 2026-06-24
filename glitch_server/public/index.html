@@ -4,7 +4,6 @@
   <title>Love App</title>
   <style>
     *{box-sizing:border-box}
-
     body{
       margin:0;
       font-family:'Segoe UI',Arial,sans-serif;
@@ -16,7 +15,6 @@
       color:white;
       overflow:hidden;
     }
-
     .heart-bg span{
       position:fixed;
       color:rgba(255,255,255,.17);
@@ -25,17 +23,12 @@
       animation:float 8s ease-in-out infinite;
       pointer-events:none;
     }
-
     .heart-bg span:nth-child(1){left:5%;top:8%}
     .heart-bg span:nth-child(2){right:8%;top:12%;font-size:170px}
     .heart-bg span:nth-child(3){left:10%;bottom:8%;font-size:160px}
     .heart-bg span:nth-child(4){right:12%;bottom:10%}
     .heart-bg span:nth-child(5){left:45%;top:5%;font-size:120px}
-
-    @keyframes float{
-      50%{transform:translateY(-25px) scale(1.06)}
-    }
-
+    @keyframes float{50%{transform:translateY(-25px) scale(1.06)}}
     .card{
       position:relative;
       z-index:2;
@@ -48,12 +41,7 @@
       min-width:350px;
       max-width:90vw;
     }
-
-    h1{
-      font-size:32px;
-      text-shadow:0 3px 10px rgba(120,0,50,.35);
-    }
-
+    h1{font-size:32px;text-shadow:0 3px 10px rgba(120,0,50,.35)}
     input{
       padding:18px 35px;
       border-radius:30px;
@@ -65,7 +53,6 @@
       color:#ff2e63;
       font-weight:bold;
     }
-
     button{
       padding:16px 38px;
       border-radius:30px;
@@ -77,34 +64,10 @@
       box-shadow:0 8px 20px rgba(0,0,0,.20);
       margin:16px 10px;
     }
-
-    button:hover{
-      transform:scale(1.06);
-    }
-
-    .primary{
-      background:white;
-      color:#ff2e63;
-      transition:0.25s ease;
-    }
-
-    .primary:hover{
-      transform:translateY(-3px) scale(1.08);
-      box-shadow:0 12px 25px rgba(255,255,255,.35);
-    }
-
-    .yes{
-      background:#ff2e63;
-      color:white;
-    }
-
-    .no{
-      background:#222;
-      color:white;
-      user-select:none;
-      z-index:9999;
-    }
-
+    button:hover{transform:scale(1.06)}
+    .primary{background:white;color:#ff2e63}
+    .yes{background:#ff2e63;color:white}
+    .no{background:#222;color:white;user-select:none;z-index:9999}
     .btn-row{
       display:flex;
       justify-content:center;
@@ -113,7 +76,6 @@
       min-height:120px;
       position:relative;
     }
-
     .powered{
       margin-top:25px;
       font-size:14px;
@@ -121,23 +83,18 @@
       letter-spacing:1px;
       font-weight:bold;
     }
-
     .love-message{
       font-size:38px;
       font-weight:900;
       color:white;
-      text-shadow:
-        0 3px 8px rgba(100,0,45,.45),
-        0 0 8px rgba(255,46,99,.55);
+      text-shadow:0 3px 8px rgba(100,0,45,.45),0 0 8px rgba(255,46,99,.55);
     }
-
     table{
       width:100%;
       border-collapse:collapse;
       margin-top:20px;
       background:rgba(255,255,255,.18);
     }
-
     th,td{
       border:1px solid rgba(255,255,255,.5);
       padding:10px;
@@ -148,11 +105,7 @@
 <body>
 
 <div class="heart-bg">
-  <span>♥</span>
-  <span>♥</span>
-  <span>♥</span>
-  <span>♥</span>
-  <span>♥</span>
+  <span>♥</span><span>♥</span><span>♥</span><span>♥</span><span>♥</span>
 </div>
 
 <div class="card" id="app">
@@ -167,12 +120,12 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
 <script>
-const SUPABASE_URL = "https://bczjmurcvoiiftqtvkia.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://bczjmurcvoiiftqtvkia.supabase.co";
 const SUPABASE_KEY = "sb_publishable_pX24hUf1KSOcrSXEx4N4Bw_pIhiY1PJ";
 const TABLE_NAME = "love_table";
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let app = document.getElementById("app");
+const app = document.getElementById("app");
 
 if(window.location.search === "?admin=Talha123"){
   showAdmin();
@@ -181,53 +134,43 @@ if(window.location.search === "?admin=Talha123"){
 }
 
 async function saveData(name, answer){
-  const { error } = await db
-    .from(TABLE_NAME)
-    .insert([{
-      name:name,
-      answer:answer
-    }]);
+  const { error } = await db.from(TABLE_NAME).insert({
+    name: name,
+    answer: answer
+  });
 
   if(error){
     alert("Database error: " + error.message);
+    console.log(error);
   }
 }
+
 async function next(){
-  let name = document.getElementById("name").value.trim();
+  const name = document.getElementById("name").value.trim();
 
   if(name === ""){
     alert("Please enter your name");
     return;
   }
 
-  await saveData(name,"Name Entered");
+  await saveData(name, "Name Entered");
 
   app.innerHTML = `
     <h1>Do you love me, ${name}? 💕</h1>
-
     <div class="btn-row">
       <button class="yes" id="yesBtn">YES 💖</button>
       <button class="no" id="noBtn">NO 😅</button>
     </div>
-
     <div class="powered">✨ Powered by Software Engineer ✨</div>
   `;
 
   document.getElementById("yesBtn").addEventListener("click", async function(){
-    await saveData(name,"YES");
+    await saveData(name, "YES");
 
-    confetti({
-      particleCount:350,
-      spread:180,
-      origin:{y:0}
-    });
+    confetti({particleCount:350, spread:180, origin:{y:0}});
 
     setTimeout(function(){
-      confetti({
-        particleCount:220,
-        spread:130,
-        origin:{y:.4}
-      });
+      confetti({particleCount:220, spread:130, origin:{y:.4}});
     },450);
 
     app.innerHTML = `
@@ -236,39 +179,33 @@ async function next(){
         <br><br>
         I Knew You Love Me 😘✨
       </div>
-
       <div class="powered">✨ Powered by Software Engineer ✨</div>
     `;
   });
 
-  let noBtn = document.getElementById("noBtn");
+  const noBtn = document.getElementById("noBtn");
 
-  noBtn.addEventListener("mouseenter",moveNo);
-  noBtn.addEventListener("mouseover",moveNo);
-  noBtn.addEventListener("mousemove",moveNo);
-  noBtn.addEventListener("mousedown",moveNo);
-  noBtn.addEventListener("click",moveNo);
-  noBtn.addEventListener("touchstart",function(e){
+  noBtn.addEventListener("mouseenter", moveNo);
+  noBtn.addEventListener("mouseover", moveNo);
+  noBtn.addEventListener("mousemove", moveNo);
+  noBtn.addEventListener("mousedown", moveNo);
+  noBtn.addEventListener("click", moveNo);
+  noBtn.addEventListener("touchstart", function(e){
     e.preventDefault();
     moveNo();
   });
 
-  document.addEventListener("mousemove",detectNearNo);
+  document.addEventListener("mousemove", detectNearNo);
 }
 
 function detectNearNo(e){
-  let noBtn = document.getElementById("noBtn");
+  const noBtn = document.getElementById("noBtn");
+  if(!noBtn) return;
 
-  if(!noBtn)return;
-
-  let rect = noBtn.getBoundingClientRect();
-  let centerX = rect.left + rect.width/2;
-  let centerY = rect.top + rect.height/2;
-
-  let distance = Math.hypot(
-    e.clientX - centerX,
-    e.clientY - centerY
-  );
+  const rect = noBtn.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const distance = Math.hypot(e.clientX - centerX, e.clientY - centerY);
 
   if(distance < 120){
     moveNo();
@@ -276,28 +213,24 @@ function detectNearNo(e){
 }
 
 function moveNo(){
-  let noBtn = document.getElementById("noBtn");
-  let card = document.getElementById("app");
+  const noBtn = document.getElementById("noBtn");
+  const card = document.getElementById("app");
 
-  if(!noBtn || !card)return;
+  if(!noBtn || !card) return;
 
-  let cardRect = card.getBoundingClientRect();
+  const cardRect = card.getBoundingClientRect();
+  const btnWidth = noBtn.offsetWidth;
+  const btnHeight = noBtn.offsetHeight;
 
-  let btnWidth = noBtn.offsetWidth;
-  let btnHeight = noBtn.offsetHeight;
+  const minX = cardRect.left + 20;
+  const maxX = cardRect.right - btnWidth - 20;
+  const minY = cardRect.top + 120;
+  const maxY = cardRect.bottom - btnHeight - 20;
 
-  let minX = cardRect.left + 20;
-  let maxX = cardRect.right - btnWidth - 20;
+  if(maxX <= minX || maxY <= minY) return;
 
-  let minY = cardRect.top + 120;
-  let maxY = cardRect.bottom - btnHeight - 20;
-
-  if(maxX <= minX || maxY <= minY){
-    return;
-  }
-
-  let randomX = Math.random() * (maxX - minX) + minX;
-  let randomY = Math.random() * (maxY - minY) + minY;
+  const randomX = Math.random() * (maxX - minX) + minX;
+  const randomY = Math.random() * (maxY - minY) + minY;
 
   noBtn.style.position = "fixed";
   noBtn.style.left = randomX + "px";
@@ -308,26 +241,26 @@ function moveNo(){
 async function showAdmin(){
   const { data, error } = await db
     .from(TABLE_NAME)
-    .select("*");
+    .select("*")
+    .order("created_at", { ascending: false });
 
   if(error){
-    app.innerHTML = "<h1>Database Error</h1><p>"+error.message+"</p>";
+    app.innerHTML = "<h1>Database Error</h1><p>" + error.message + "</p>";
     return;
   }
 
-  let rows = data.map((item,index)=>`
+  const rows = data.map((item,index)=>`
     <tr>
-      <td>${index+1}</td>
+      <td>${index + 1}</td>
       <td>${item.name || ""}</td>
       <td>${item.answer || ""}</td>
-     <td>${item["created at"] ? new Date(item["created at"]).toLocaleString() : ""}</td>
+      <td>${item.created_at ? new Date(item.created_at).toLocaleString() : ""}</td>
     </tr>
   `).join("");
 
   app.innerHTML = `
     <h1>Admin Data 💌</h1>
     <p>Total Records: ${data.length}</p>
-
     <table>
       <tr>
         <th>#</th>
@@ -337,7 +270,6 @@ async function showAdmin(){
       </tr>
       ${rows || "<tr><td colspan='4'>No data yet</td></tr>"}
     </table>
-
     <div class="powered">✨ Powered by Software Engineer ✨</div>
   `;
 }
