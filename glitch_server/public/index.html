@@ -118,12 +118,13 @@
       color:white;
     }
 
-    .no{
-      background:#222;
-      color:white;
-      user-select:none;
-      position:relative;
-    }
+.no{
+  background:#222;
+  color:white;
+  user-select:none;
+  position:relative;
+  z-index:9999;
+}   
 
     .primary{
       background:white;
@@ -272,24 +273,81 @@ function next(){
     `;
   });
 
-  let noBtn=document.getElementById("noBtn");
+let noBtn=document.getElementById("noBtn");
 
-  noBtn.addEventListener("click",moveNo);
-  noBtn.addEventListener("mousedown",moveNo);
-  noBtn.addEventListener("touchstart",function(e){
-    e.preventDefault();
+noBtn.addEventListener("mouseenter",moveNo);
+noBtn.addEventListener("mouseover",moveNo);
+noBtn.addEventListener("mousemove",moveNo);
+noBtn.addEventListener("mousedown",moveNo);
+noBtn.addEventListener("click",moveNo);
+noBtn.addEventListener("touchstart",function(e){
+  e.preventDefault();
+  moveNo();
+});
+
+document.addEventListener("mousemove",function(e){
+  let noBtn=document.getElementById("noBtn");
+  let yesBtn=document.getElementById("yesBtn");
+
+  if(!noBtn || !yesBtn)return;
+
+  let noRect=noBtn.getBoundingClientRect();
+  let yesRect=yesBtn.getBoundingClientRect();
+
+  let noCenterX=noRect.left + noRect.width/2;
+  let noCenterY=noRect.top + noRect.height/2;
+
+  let distance=Math.hypot(e.clientX-noCenterX,e.clientY-noCenterY);
+
+  if(distance < 120){
     moveNo();
-  });
+  }
+
+  let overlap = !(
+    noRect.right < yesRect.left ||
+    noRect.left > yesRect.right ||
+    noRect.bottom < yesRect.top ||
+    noRect.top > yesRect.bottom
+  );
+
+  if(overlap){
+    moveNo();
+  }
+});
 }
 
 function moveNo(){
   let noBtn=document.getElementById("noBtn");
+  let yesBtn=document.getElementById("yesBtn");
+
   if(!noBtn)return;
 
+  let newLeft,newTop;
+  let safe=false;
+
+  for(let i=0;i<30;i++){
+    newLeft=Math.random()*(window.innerWidth-120);
+    newTop=Math.random()*(window.innerHeight-70);
+
+    if(yesBtn){
+      let yesRect=yesBtn.getBoundingClientRect();
+
+      safe =
+        newLeft + 120 < yesRect.left ||
+        newLeft > yesRect.right ||
+        newTop + 70 < yesRect.top ||
+        newTop > yesRect.bottom;
+    }else{
+      safe=true;
+    }
+
+    if(safe)break;
+  }
+
   noBtn.style.position="fixed";
-  noBtn.style.left=(Math.random()*75+8)+"%";
-  noBtn.style.top=(Math.random()*70+10)+"%";
-  noBtn.style.transition=".03s linear";
+  noBtn.style.left=newLeft+"px";
+  noBtn.style.top=newTop+"px";
+  noBtn.style.transition=".02s linear";
 }
 
 function showAdmin(){
