@@ -3,26 +3,122 @@
 <head>
   <title>Love App</title>
   <style>
-    body{margin:0;font-family:Arial;background:linear-gradient(135deg,#ff4d6d,#ffb6c1);height:100vh;display:flex;justify-content:center;align-items:center;color:white}
-    .card{text-align:center;padding:60px;border-radius:35px;background:rgba(255,255,255,.18);box-shadow:0 10px 30px rgba(0,0,0,.15)}
-    input{padding:18px 40px;border-radius:30px;border:0;text-align:center;font-size:18px}
-    button{padding:16px 35px;border-radius:30px;border:0;margin:18px;font-weight:bold;cursor:pointer;font-size:18px}
-    .yes{background:#ff2e63;color:white}.no{background:#333;color:white}.primary{color:#ff2e63}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:linear-gradient(135deg,#ff4d6d,#ffb6c1);
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:white;
+      overflow:hidden;
+    }
+
+    .card{
+      text-align:center;
+      padding:60px;
+      border-radius:35px;
+      background:rgba(255,255,255,.18);
+      backdrop-filter:blur(10px);
+      box-shadow:0 10px 30px rgba(0,0,0,.15);
+      min-width:350px;
+    }
+
+    input{
+      padding:18px 40px;
+      border-radius:30px;
+      border:none;
+      outline:none;
+      text-align:center;
+      font-size:18px;
+      width:220px;
+    }
+
+    button{
+      padding:16px 35px;
+      border-radius:30px;
+      border:none;
+      margin:18px;
+      font-weight:bold;
+      cursor:pointer;
+      font-size:18px;
+      transition:.2s;
+    }
+
+    button:hover{
+      transform:scale(1.08);
+    }
+
+    .yes{
+      background:#ff2e63;
+      color:white;
+    }
+
+    .no{
+      background:#333;
+      color:white;
+    }
+
+    .primary{
+      background:white;
+      color:#ff2e63;
+    }
+
+    .powered{
+      margin-top:25px;
+      font-size:14px;
+      opacity:.85;
+      letter-spacing:1px;
+    }
+
+    .love-message{
+      font-size:38px;
+      font-weight:bold;
+      animation:pop 1s ease;
+      text-shadow:0 0 10px white,
+                  0 0 20px white,
+                  0 0 30px #ff2e63;
+    }
+
+    @keyframes pop{
+      0%{
+        transform:scale(0);
+        opacity:0;
+      }
+      100%{
+        transform:scale(1);
+        opacity:1;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="card" id="app">
-    <h1>💖 Enter Your Name</h1>
-    <input id="name" placeholder="Your name..." />
-    <br><br>
-    <button class="primary" id="continueBtn">Continue ➜</button>
+
+<div class="card" id="app">
+  <h1>💖 Enter Your Name</h1>
+
+  <input id="name" placeholder="Your name...">
+
+  <br><br>
+
+  <button class="primary" id="continueBtn">
+    Continue ➜
+  </button>
+
+  <div class="powered">
+    ✨ Powered by Talha Tariq ✨
   </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
 <script>
 document.getElementById("continueBtn").addEventListener("click", next);
 
 function next(){
-  var name = document.getElementById("name").value.trim();
+  let name = document.getElementById("name").value.trim();
+
   if(name === ""){
     alert("Please enter your name");
     return;
@@ -30,25 +126,61 @@ function next(){
 
   document.getElementById("app").innerHTML = `
     <h1>Do you love me, ${name}? 💕</h1>
-    <button class="yes" id="yesBtn">YES 💖</button>
-    <button class="no" id="noBtn">NO 😅</button>
+
+    <button class="yes" id="yesBtn">
+      YES 💖
+    </button>
+
+    <button class="no" id="noBtn">
+      NO 😅
+    </button>
+
+    <div class="powered">
+      ✨ Powered by Talha Tariq ✨
+    </div>
   `;
 
   document.getElementById("yesBtn").addEventListener("click", function(){
-    document.getElementById("app").innerHTML = `<h1>💖 Yesss ${name}, I knew it 💖</h1>`;
+    confetti({
+      particleCount:300,
+      spread:180,
+      origin:{ y:0 }
+    });
+
+    setTimeout(function(){
+      confetti({
+        particleCount:200,
+        spread:120
+      });
+    },500);
+
+    document.getElementById("app").innerHTML = `
+      <div class="love-message">
+        💖 Yesss ${name}! 💖
+        <br><br>
+        I Knew You Love Me 😘✨
+      </div>
+
+      <div class="powered">
+        ✨ Powered by Talha Tariq ✨
+      </div>
+    `;
   });
 
-  var noBtn = document.getElementById("noBtn");
+  let noBtn = document.getElementById("noBtn");
+
   noBtn.addEventListener("mouseover", moveNo);
   noBtn.addEventListener("touchstart", moveNo);
 }
 
 function moveNo(){
-  var noBtn = document.getElementById("noBtn");
+  let noBtn = document.getElementById("noBtn");
+
   noBtn.style.position = "fixed";
   noBtn.style.left = Math.random() * 80 + "%";
   noBtn.style.top = Math.random() * 80 + "%";
 }
 </script>
+
 </body>
 </html>
