@@ -169,7 +169,7 @@
 <script>
 const SUPABASE_URL = "https://bczjmurcvoiiftqtvkia.supabase.co/rest/v1/";
 const SUPABASE_KEY = "sb_publishable_wkVI-obT0GYZncKQAdY1wg_hKSXMUTB";
-const TABLE_NAME = "Love_table";
+const TABLE_NAME = "love_table";
 
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let app = document.getElementById("app");
@@ -185,8 +185,7 @@ async function saveData(name, answer){
     .from(TABLE_NAME)
     .insert([{
       name:name,
-      answer:answer,
-      "created at":new Date().toISOString()
+      answer:answer
     }]);
 
   if(error){
