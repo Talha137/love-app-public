@@ -185,8 +185,7 @@ async function saveData(name, answer){
     .from(TABLE_NAME)
     .insert([{
       name:name,
-      answer:answer,
-      created_at:new Date().toISOString()
+      answer:answer
     }]);
 
   if(error){
@@ -310,8 +309,7 @@ function moveNo(){
 async function showAdmin(){
   const { data, error } = await db
     .from(TABLE_NAME)
-    .select("*")
-    .order("created_at",{ascending:false});
+    .select("*");
 
   if(error){
     app.innerHTML = "<h1>Database Error</h1><p>"+error.message+"</p>";
@@ -323,7 +321,7 @@ async function showAdmin(){
       <td>${index+1}</td>
       <td>${item.name || ""}</td>
       <td>${item.answer || ""}</td>
-      <td>${new Date(item.created_at).toLocaleString()}</td>
+      <td>${item.created_at ? new Date(item.created_at).toLocaleString() : ""}</td>
     </tr>
   `).join("");
 
@@ -345,6 +343,5 @@ async function showAdmin(){
   `;
 }
 </script>
-
 </body>
 </html>
